@@ -12,19 +12,77 @@ namespace Prime_Generator
         {
             //Sieve of Eratosthenes
 
-            int min = 500; int max = 50000;
+            var inputLines = GetInput();
 
-            var myRange = GenerateRange(min, max);
-            var cleanRange = CleanRange(myRange);
-            var primeNumbers = GetPrimeNumbers(cleanRange, max);
+            int[] min = new int[inputLines.Count];
+            int[] max = new int[inputLines.Count];
+            
+            int index = 0;
+            foreach(var l in inputLines)
+            {
+                var s = l.Trim();
+                string[] myLine = s.Split(' ');
+                min[index] = int.Parse(myLine[0]);
+                if (myLine.Length > 1)
+                {
+                    max[index] = int.Parse(myLine[1]);
+                }
+                else
+                {
+                    max[index] = min[index];
+                }
+                index++;
+            }
 
-            Console.WriteLine("Clean Range: " + PrintRange(cleanRange));
-            Console.WriteLine("\n\n\n\nPrime Range: " + PrintRange(primeNumbers));
+
+            var primeRanges = new List<List<int>>();
+
+            for (int i = 0; i < min.Length; i++)
+            {                
+                var myRange = GenerateRange(min[i], max[i]);
+                var cleanRange = CleanRange(myRange);
+                var primeNumbers = GetPrimeNumbers(cleanRange, max[i]);
+                primeRanges.Add(primeNumbers);
+            }
+
+            foreach(var r in primeRanges)
+            {
+                PrintRangeVertical(r);
+                Console.WriteLine();
+            }
+
+            //int min = 500; int max = 50000;
+
+
+            //Console.WriteLine("Clean Range: " + PrintRange(cleanRange));
+            //Console.WriteLine("\n\n\n\nPrime Range: " + PrintRange(primeNumbers));
             Console.ReadLine();
+        }
+
+        static List<string> GetInput()
+        {
+            var s = "dummy";
+            var inputList = new List<string>();
+            while (true)
+            {
+                s = Console.ReadLine();
+                
+                if (string.IsNullOrWhiteSpace(s))
+                    break;
+
+                inputList.Add(s);
+            }
+            return inputList;
         }
 
         static List<int> GetPrimeNumbers(List<int> range, int max)
         {
+
+            if (max == 0 || max == 1)
+            {
+                return new List<int>();
+            }
+
             var maxValue = (int)Math.Ceiling(Math.Sqrt(max));
             
             //Find MaxIndex
@@ -39,7 +97,7 @@ namespace Prime_Generator
                 }
                 n++;
             }
-            Console.WriteLine(maxIndex + " MaxValue:" + maxValue);
+            //Console.WriteLine(maxIndex + " MaxValue:" + maxValue);
 
             //Creating seiveRange for finding out more Composites
             var seiveRange = CleanRange(GenerateRange(0, maxValue));
@@ -159,6 +217,14 @@ namespace Prime_Generator
             s = s + " ]";
             return s;
         }
+        static void PrintRangeVertical(List<int> range)
+        {
+            foreach (var x in range)
+            {
+                Console.WriteLine(x);
+            }
+        }
+
 
 
     }
